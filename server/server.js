@@ -13,7 +13,7 @@ const {generateMessage} = require('./utils/message');
 
 // io.on lets us register event listener
 // we listen for specific event and do something when that event happens
-// 'connection' lets us to listen for a new connection meaning client connected the server
+// 'connection' lets us to listen for a new connection meaning client connected to the server
 io.on('connection', (socket) => {
   console.log('new user connected');
 
@@ -24,18 +24,18 @@ io.on('connection', (socket) => {
   //   createdAt: 2018
   // });
 
-  // socket.emit from Admin text welcome to the chat app
+  // socket.emit from Admin to the new user
   socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
-  // socket.broadcast.emit from Admin text New user joined
+  // socket.broadcast.emit from Admin to all other users
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
   // get message from the client
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
     // socket.emit - emits an event a single user but io.emit emits an event to all connected users
     // send message to each and every connected users
     io.emit('newMessage', generateMessage(message.from, message.text));
-
+    callback('This is from the server');
     // message send to everybody except itself
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
