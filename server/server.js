@@ -16,15 +16,22 @@ io.on('connection', (socket) => {
   console.log('new user connected');
 
   // send message to the client
-  socket.emit('newMessage', {
-    from: 'john@doe.com',
-    text: 'Message from the server side',
-    createdAt: 2018
-  });
+  // socket.emit('newMessage', {
+  //   from: 'john@doe.com',
+  //   text: 'Message from the server side',
+  //   createdAt: 2018
+  // });
 
   // get message from the client
   socket.on('createMessage', (message) => {
     console.log('createMessage', message);
+    // socket.emit - emits an event a single user but io.emit emits an event to all connected users
+    // send message to each and every connected users
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    })
   });
 
   // client disconnect

@@ -6,10 +6,10 @@ socket.on('connect', () => {
 });
 
 // send message to the server
-socket.emit('createMessage',{
-  from: 'john@example.com',
-  text: "Hey this is form client side"
-});
+// socket.emit('createMessage',{
+//   from: 'john@example.com',
+//   text: "Hey this is form client side"
+// });
 
 // get message from the server
 socket.on('newMessage', (message) => {
