@@ -5,15 +5,15 @@ socket.on('connect', () => {
   console.log("Connected to server");
 });
 
-// get email from the server
-socket.on('newEmail', (email) => {
-  console.log(email);
+// send message to the server
+socket.emit('createMessage',{
+  from: 'john@example.com',
+  text: "Hey this is form client side"
 });
 
-// send email to the server
-socket.emit('createEmail',{
-  to: 'john@example.com',
-  text: "Hey this is form client"
+// get message from the server
+socket.on('newMessage', (message) => {
+  console.log('newMessage', message);
 });
 
 socket.on('disconnect', () => {

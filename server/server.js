@@ -15,16 +15,16 @@ const io = socketIO(server);
 io.on('connection', (socket) => {
   console.log('new user connected');
 
-  // send email to the client
-  socket.emit('newEmail', {
+  // send message to the client
+  socket.emit('newMessage', {
     from: 'john@doe.com',
-    text: 'What are you doing',
+    text: 'Message from the server side',
     createdAt: 2018
   });
 
-  // get email from the client
-  socket.on('createEmail', (newEmail) => {
-    console.log('createEmail', newEmail);
+  // get message from the client
+  socket.on('createMessage', (message) => {
+    console.log('createMessage', message);
   });
 
   // client disconnect
