@@ -38,13 +38,34 @@ let input = document.getElementById('input');
 messageForm.addEventListener('submit', (event) => {
   event.preventDefault();
   
-  // send input data
-  socket.emit('createMessage', {
-    from: 'User',
-    text: input.value
-  }, () => {
+  // if input field is not empty: send the message
+  if (input.value) {
+    // send input data
+    socket.emit('createMessage', {
+      from: 'User',
+      text: input.value
+    }, () => {
 
+    });
+    // empty input field after sent
+    input.value = '';
+  }
+});
+
+// Send Location
+let locationButton = document.getElementById('send-location');
+locationButton.addEventListener('click', () => {
+  if(!navigator.geolocation) {
+    return alert('Geolocation not supported by your browser');
+  }
+
+  navigator.geolocation.getCurrentPosition((position) => {
+    // console.log("position");
+    socket.emit('createLocationMessage', {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    });
+  }, () => {
+    alert('unable to fetch location');
   });
-  // empty input field after sent
-  input.value = '';
 });
