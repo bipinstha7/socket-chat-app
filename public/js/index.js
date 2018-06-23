@@ -52,6 +52,23 @@ messageForm.addEventListener('submit', (event) => {
   }
 });
 
+// receive location 
+socket.on('newLocationMessage', (message) => {
+  let li = document.createElement('li');
+  let a = document.createElement('a');
+  let node = document.createTextNode('My current location');
+  a.setAttribute('target', '_blank');
+  a.appendChild(node);
+
+  let liTextNode = document.createTextNode(`${message.from}: `); 
+  a.setAttribute('href', message.url);
+  li.appendChild(liTextNode);
+  li.appendChild(a);
+
+  let ol = document.getElementById('messages');
+  ol.appendChild(li);
+});
+
 // Send Location
 let locationButton = document.getElementById('send-location');
 locationButton.addEventListener('click', () => {

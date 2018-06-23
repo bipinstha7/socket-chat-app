@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 const server = http.createServer(app);
 const io = socketIO(server);
 
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 // io.on lets us register event listener
 // we listen for specific event and do something when that event happens
@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
 
   // get user's position
   socket.on('createLocationMessage', (coords) => {
-    io.emit('newMessage', generateMessage('Admin', `${coords.latitude}, ${coords.longitude}`));
+    io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
   });
 
   // client disconnect
