@@ -8,5 +8,20 @@
 </head>
 <body>
   <h1>Welcome to the node chat app</h1>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // io requests from client to the server to open up web socket and keep that connection open
+    const socket = io();
+
+    socket.on('connect', () => {
+      console.log("Connected to server");
+    });
+
+    socket.on('disconnect', () => {
+      console.log("Connection terminated from the server");
+    });
+
+  </script>
 </body>
 </html>
