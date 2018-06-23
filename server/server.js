@@ -9,6 +9,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 const server = http.createServer(app);
 const io = socketIO(server);
 
+const {generateMessage} = require('./utils/message');
+
 // io.on lets us register event listener
 // we listen for specific event and do something when that event happens
 // 'connection' lets us to listen for a new connection meaning client connected the server
@@ -23,27 +25,16 @@ io.on('connection', (socket) => {
   // });
 
   // socket.emit from Admin text welcome to the chat app
-  socket.emit('newMessage', {
-    from: 'Admin',
-    text: 'Welcome to the chat app'
-  });
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
   // socket.broadcast.emit from Admin text New user joined
-  socket.broadcast.emit('newMessage', {
-    from: 'Admin',
-    text: 'New user joined',
-    createdAt: new Date().getTime()
-  });
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
   // get message from the client
   socket.on('createMessage', (message) => {
     console.log('createMessage', message);
     // socket.emit - emits an event a single user but io.emit emits an event to all connected users
     // send message to each and every connected users
-    io.emit('newMessage', {
-      from: message.from,
-      text: message.text,
-      createdAt: new Date().getTime()
-    });
+    io.emit('newMessage', generateMessage(message.from, message.text));
 
     // message send to everybody except itself
     // socket.broadcast.emit('newMessage', {
