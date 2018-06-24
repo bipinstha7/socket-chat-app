@@ -11,6 +11,8 @@ const io = socketIO(server);
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 
+const {isRealString} = require('./utils/validation');
+
 // io.on lets us register event listener
 // we listen for specific event and do something when that event happens
 // 'connection' lets us to listen for a new connection meaning client connected to the server
@@ -28,6 +30,16 @@ io.on('connection', (socket) => {
   socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
   // socket.broadcast.emit from Admin to all other users
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
+
+
+  // join
+  socket.on('join', (name, room, callback) => {
+    if(!isRealString(name) || !isRealString(room)) {
+      callback('name and room name are required');
+    }
+    callback();
+  });
+
 
   // get message from the client
   socket.on('createMessage', (message, callback) => {
@@ -49,6 +61,9 @@ io.on('connection', (socket) => {
   });
 });
 
+// app.post('/chat', (req, res) => {
+//   res.sendFile(path.join(__dirname,'../public/chat.html'));
+// });
 
 const port = process.env.PORT || 3000;
 server.listen(port, () => {

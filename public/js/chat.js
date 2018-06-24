@@ -1,3 +1,9 @@
+// const bodyParser = require('body-parser');
+
+// // body-parser middleware
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+
 // io requests from client to the server to open up web socket and keep that connection open
 const socket = io();
 
@@ -27,6 +33,19 @@ function scrollToBottom() {
 
 socket.on('connect', () => {
   console.log("Connected to server");
+
+  let params = (new URL(document.location)).searchParams;;
+  let name = params.get('name');
+  let room = params.get('room')
+
+  socket.emit('join', name, room, err => {
+    if(err) {
+      alert(err);
+      window.location.href = '/';
+    } else {
+      console.log('No err');
+    }
+  });
 });
 
 // send message to the server
