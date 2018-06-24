@@ -71,18 +71,23 @@ socket.on('newLocationMessage', (message) => {
 
 // Send Location
 let locationButton = document.getElementById('send-location');
+
 locationButton.addEventListener('click', () => {
   if(!navigator.geolocation) {
     return alert('Geolocation not supported by your browser');
   }
 
+  locationButton.setAttribute('disabled', 'true');
+
   navigator.geolocation.getCurrentPosition((position) => {
+    locationButton.setAttribute('disabled', 'false');
     // console.log("position");
     socket.emit('createLocationMessage', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     });
   }, () => {
+    locationButton.setAttribute('disabled', 'false');
     alert('unable to fetch location');
   });
 });
