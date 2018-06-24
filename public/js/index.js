@@ -1,6 +1,30 @@
 // io requests from client to the server to open up web socket and keep that connection open
 const socket = io();
 
+// message scroller to newest
+function scrollToBottom() {
+  // selectors
+  let messages = document.getElementById('messages');
+  let newMessage = messages.lastChild;
+  let newMessageHeight = newMessage.clientHeight;
+
+  // let lastMessageHeight2 = newMessage.previousElementSibling
+  // console.log(lastMessageHeight2);
+
+  // let lastMessageHeight = newMessage.previousElementSibling.clientHeight;
+  // console.log(lastMessageHeight);
+
+  // heights
+  let clientHeight = messages.clientHeight;
+  let scrollTop = messages.scrollTop;
+  let scrollHeight = messages.scrollHeight;
+
+  if(clientHeight + scrollTop + newMessageHeight + 61 >= scrollHeight) {
+    messages.scrollTop = scrollHeight;
+  }
+}
+
+
 socket.on('connect', () => {
   console.log("Connected to server");
 });
@@ -29,6 +53,7 @@ socket.on('newMessage', (message) => {
   li.innerHTML = html;
   ol.appendChild(li);
 
+  scrollToBottom(); 
 
   // let li = document.createElement('li');
   // let strong = document.createElement('strong');
@@ -40,11 +65,6 @@ socket.on('newMessage', (message) => {
   // let ol = document.getElementById('messages');
   // ol.appendChild(li);
 });
-
-socket.on('disconnect', () => {
-  console.log("Connection terminated from the server");
-});
-
 
 // dom process
 
@@ -84,6 +104,7 @@ socket.on('newLocationMessage', (message) => {
    li.innerHTML = html;
    ol.appendChild(li);
 
+   scrollToBottom();
 
   // let li = document.createElement('li');
   // let a = document.createElement('a');
@@ -121,4 +142,9 @@ locationButton.addEventListener('click', () => {
     locationButton.setAttribute('disabled', 'false');
     alert('unable to fetch location');
   });
+});
+
+
+socket.on('disconnect', () => {
+  console.log("Connection terminated from the server");
 });
