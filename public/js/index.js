@@ -14,11 +14,15 @@ socket.on('connect', () => {
 // get message from the server
 socket.on('newMessage', (message) => {
   console.log('newMessage', message);
+
+  // format time using moment
+  const formattedTime = moment(message.createdAt).format('LT');
+
   let li = document.createElement('li');
   let strong = document.createElement('strong');
   let nodeFrom = document.createTextNode(`${message.from}`);
   strong.appendChild(nodeFrom);
-  let nodeText = document.createTextNode(`: ${message.text}`);
+  let nodeText = document.createTextNode(` ${formattedTime}: ${message.text}`);
   li.appendChild(strong);
   li.appendChild(nodeText);
   let ol = document.getElementById('messages');
@@ -54,13 +58,15 @@ messageForm.addEventListener('submit', (event) => {
 
 // receive location 
 socket.on('newLocationMessage', (message) => {
+  // format time using moment
+  const formattedTime = moment(message.createdAt).format('LT');
   let li = document.createElement('li');
   let a = document.createElement('a');
   let node = document.createTextNode('My current location');
   a.setAttribute('target', '_blank');
   a.appendChild(node);
 
-  let liTextNode = document.createTextNode(`${message.from}: `); 
+  let liTextNode = document.createTextNode(`${message.from} ${formattedTime}: `); 
   a.setAttribute('href', message.url);
   li.appendChild(liTextNode);
   li.appendChild(a);

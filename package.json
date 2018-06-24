@@ -19,6 +19,7 @@
   "homepage": "https://github.com/bipinstha7/socket-chat-app#readme",
   "dependencies": {
     "express": "^4.16.3",
+    "moment": "^2.22.2",
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
