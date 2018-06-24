@@ -14,19 +14,31 @@ socket.on('connect', () => {
 // get message from the server
 socket.on('newMessage', (message) => {
   console.log('newMessage', message);
-
   // format time using moment
   const formattedTime = moment(message.createdAt).format('LT');
 
-  let li = document.createElement('li');
-  let strong = document.createElement('strong');
-  let nodeFrom = document.createTextNode(`${message.from}`);
-  strong.appendChild(nodeFrom);
-  let nodeText = document.createTextNode(` ${formattedTime}: ${message.text}`);
-  li.appendChild(strong);
-  li.appendChild(nodeText);
+  let template = document.getElementById('message-template').innerHTML;
+  let html = Mustache.render(template, {
+    from: message.from,
+    createdAt: formattedTime, 
+    text: message.text
+  });
+
   let ol = document.getElementById('messages');
+  let li = document.createElement('li');
+  li.innerHTML = html;
   ol.appendChild(li);
+
+
+  // let li = document.createElement('li');
+  // let strong = document.createElement('strong');
+  // let nodeFrom = document.createTextNode(`${message.from}`);
+  // strong.appendChild(nodeFrom);
+  // let nodeText = document.createTextNode(` ${formattedTime}: ${message.text}`);
+  // li.appendChild(strong);
+  // li.appendChild(nodeText);
+  // let ol = document.getElementById('messages');
+  // ol.appendChild(li);
 });
 
 socket.on('disconnect', () => {
@@ -60,19 +72,32 @@ messageForm.addEventListener('submit', (event) => {
 socket.on('newLocationMessage', (message) => {
   // format time using moment
   const formattedTime = moment(message.createdAt).format('LT');
-  let li = document.createElement('li');
-  let a = document.createElement('a');
-  let node = document.createTextNode('My current location');
-  a.setAttribute('target', '_blank');
-  a.appendChild(node);
+   let template = document.getElementById('location-message-template').innerHTML;
+   let html = Mustache.render(template, {
+     from: message.from,
+     createdAt: formattedTime, 
+     url: message.url
+   });
+ 
+   let ol = document.getElementById('messages');
+   let li = document.createElement('li');
+   li.innerHTML = html;
+   ol.appendChild(li);
 
-  let liTextNode = document.createTextNode(`${message.from} ${formattedTime}: `); 
-  a.setAttribute('href', message.url);
-  li.appendChild(liTextNode);
-  li.appendChild(a);
 
-  let ol = document.getElementById('messages');
-  ol.appendChild(li);
+  // let li = document.createElement('li');
+  // let a = document.createElement('a');
+  // let node = document.createTextNode('My current location');
+  // a.setAttribute('target', '_blank');
+  // a.appendChild(node);
+
+  // let liTextNode = document.createTextNode(`${message.from} ${formattedTime}: `); 
+  // a.setAttribute('href', message.url);
+  // li.appendChild(liTextNode);
+  // li.appendChild(a);
+
+  // let ol = document.getElementById('messages');
+  // ol.appendChild(li);
 });
 
 // Send Location
