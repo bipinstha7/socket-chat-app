@@ -23,14 +23,6 @@ let users = new Users();
 io.on('connection', (socket) => {
   console.log('new user connected');
 
-  // send message to the client
-  // socket.emit('newMessage', {
-  //   from: 'john@doe.com',
-  //   text: 'Message from the server side',
-  //   createdAt: 2018
-  // });
-
-
   // join
   socket.on('join', (name, room, callback) => {
     if(!isRealString(name) || !isRealString(room)) {
@@ -38,14 +30,12 @@ io.on('connection', (socket) => {
     }
 
     socket.join(room);
-    users.removeUser(socket.id);
     users.addUser(socket.id, name, room);
 
     io.to(room).emit('updateUserList', users.getUserList(room));
 
     // socket.emit from Admin to the new user
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
-    // socket.broadcast.emit from Admin to all other users
     // socket.broadcast.to(room).emit() - emits the message to all other users who are connected/inside the room
     socket.broadcast.to(room).emit('newMessage', generateMessage('Admin', `${name} has joined`));
 
@@ -55,8 +45,6 @@ io.on('connection', (socket) => {
 
   // get message from the client
   socket.on('createMessage', (message, callback) => {
-
-     // console.log('createMessage', message);
     // socket.emit - emits an event a single user but io.emit emits an event to all connected users
     // send message to each and every connected users
     let user = users.getUser(socket.id);

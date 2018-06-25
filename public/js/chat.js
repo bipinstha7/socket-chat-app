@@ -1,9 +1,3 @@
-// const bodyParser = require('body-parser');
-
-// // body-parser middleware
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
-
 // io requests from client to the server to open up web socket and keep that connection open
 const socket = io();
 
@@ -13,14 +7,6 @@ function scrollToBottom() {
   let messages = document.getElementById('messages');
   let newMessage = messages.lastChild;
   let newMessageHeight = newMessage.clientHeight;
-
-  // let lastMessageHeight2 = newMessage.previousElementSibling
-  // console.log(lastMessageHeight2);
-
-  // let lastMessageHeight = newMessage.previousElementSibling.clientHeight;
-  // console.log(lastMessageHeight);
-
-  // heights
   let clientHeight = messages.clientHeight;
   let scrollTop = messages.scrollTop;
   let scrollHeight = messages.scrollHeight;
@@ -29,7 +15,6 @@ function scrollToBottom() {
     messages.scrollTop = scrollHeight;
   }
 }
-
 
 socket.on('connect', () => {
   console.log("Connected to server");
@@ -53,13 +38,7 @@ socket.on('disconnect', () => {
   console.log("Connection terminated from the server");
 });
 
-// send message to the server
-// socket.emit('createMessage',{
-//   from: 'john@example.com',
-//   text: "Hey this is form client side"
-// });
-
-// update joined user's name
+// update joined user's name and room
 socket.on('updateUserList', users => {
   // console.log('Users list', users);
   let ol = document.createElement('ol');
@@ -68,7 +47,6 @@ socket.on('updateUserList', users => {
     let li = document.createElement('li');
     li.appendChild(document.createTextNode(user.name));
     ol.appendChild(li);
-    // console.log(ol);
     let showRoomName = document.getElementById('roomName');
     roomName.innerHTML = user.room;
   });
@@ -80,8 +58,7 @@ socket.on('updateUserList', users => {
 
 
 // get message from the server
-socket.on('newMessage', (message) => {
-  // console.log('newMessage', message);
+socket.on('newMessage', message => {
   // format time using moment
   const formattedTime = moment(message.createdAt).format('LT');
 
@@ -98,20 +75,9 @@ socket.on('newMessage', (message) => {
   ol.appendChild(li);
 
   scrollToBottom(); 
-
-  // let li = document.createElement('li');
-  // let strong = document.createElement('strong');
-  // let nodeFrom = document.createTextNode(`${message.from}`);
-  // strong.appendChild(nodeFrom);
-  // let nodeText = document.createTextNode(` ${formattedTime}: ${message.text}`);
-  // li.appendChild(strong);
-  // li.appendChild(nodeText);
-  // let ol = document.getElementById('messages');
-  // ol.appendChild(li);
 });
 
-// dom process
-
+// send data from client to server
 let messageForm = document.getElementById('message-form');
 let input = document.getElementById('input');
 
@@ -147,20 +113,6 @@ socket.on('newLocationMessage', (message) => {
    ol.appendChild(li);
 
    scrollToBottom();
-
-  // let li = document.createElement('li');
-  // let a = document.createElement('a');
-  // let node = document.createTextNode('My current location');
-  // a.setAttribute('target', '_blank');
-  // a.appendChild(node);
-
-  // let liTextNode = document.createTextNode(`${message.from} ${formattedTime}: `); 
-  // a.setAttribute('href', message.url);
-  // li.appendChild(liTextNode);
-  // li.appendChild(a);
-
-  // let ol = document.getElementById('messages');
-  // ol.appendChild(li);
 });
 
 // Send Location
