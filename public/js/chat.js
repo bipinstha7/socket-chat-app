@@ -60,18 +60,22 @@ socket.on('disconnect', () => {
 // });
 
 // update joined user's name
-socket.on('updateUserList', (users) => {
+socket.on('updateUserList', users => {
   // console.log('Users list', users);
   let ol = document.createElement('ol');
 
   users.forEach(user => {
     let li = document.createElement('li');
-    li.appendChild(document.createTextNode(user));
+    li.appendChild(document.createTextNode(user.name));
     ol.appendChild(li);
-    console.log(ol);
+    // console.log(ol);
+    let showRoomName = document.getElementById('roomName');
+    roomName.innerHTML = user.room;
   });
   let showUsers = document.getElementById('users');
   showUsers.innerHTML = ol.innerHTML;
+
+  
 });
 
 
@@ -118,10 +122,8 @@ messageForm.addEventListener('submit', (event) => {
   if (input.value) {
     // send input data
     socket.emit('createMessage', {
-      from: 'User',
       text: input.value
     }, () => {
-
     });
     // empty input field after sent
     input.value = '';

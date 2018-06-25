@@ -68,10 +68,10 @@ describe('Users', () => {
       let userId = '3';
       let user = users.getUser(userId);
 
-      expect(user).toEqual('gurung');
+      // expect(user).toEqual('gurung');
 
-      // expect(user).toBeTruthy();
-      // expect(user.id).toBe(userId);
+      expect(user).toBeTruthy();
+      expect(user.id).toBe(userId);
     });
 
     // it('should not return user of invalid userId', () => {

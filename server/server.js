@@ -55,11 +55,16 @@ io.on('connection', (socket) => {
 
   // get message from the client
   socket.on('createMessage', (message, callback) => {
-    // console.log('createMessage', message);
+
+     // console.log('createMessage', message);
     // socket.emit - emits an event a single user but io.emit emits an event to all connected users
     // send message to each and every connected users
-    io.emit('newMessage', generateMessage(message.from, message.text));
-    callback('This is from the server');
+    let user = users.getUser(socket.id);
+    if (user && isRealString(message.text)) {
+      // send message to respective room only
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+    }
+    callback(); 
   });
 
   // get user's position

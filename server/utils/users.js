@@ -33,17 +33,22 @@ class Users {
 
   getUser(id) {
     // find the user by id
-    let user = this.users.filter(user => user.id === id);
-    return user[0].name;
+    // let user = this.users.filter(user => user.id === id);
+    // return user[0].name;
 
-    // return this.users.filter(user => user.id === id)[0];
+    return this.users.filter(user => user.id === id)[0];
   }
 
   getUserList(room) {
     // find all of the users by the room they are joined
     let users = this.users.filter(user => user.room === room);
 
-    let namesArray = users.map(user => user.name);
+    let namesArray = users.map(user => {
+     return {
+        name: user.name, 
+        room: user.room
+     };
+    });
 
     return namesArray;
   }
