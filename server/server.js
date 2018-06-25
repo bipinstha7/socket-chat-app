@@ -12,6 +12,10 @@ const io = socketIO(server);
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 const {isRealString} = require('./utils/validation');
+const {Users} = require('./utils/users');
+// make instance of a User class
+let users = new Users();
+
 
 // io.on lets us register event listener
 // we listen for specific event and do something when that event happens
@@ -30,15 +34,14 @@ io.on('connection', (socket) => {
   // join
   socket.on('join', (name, room, callback) => {
     if(!isRealString(name) || !isRealString(room)) {
-      callback('name and room name are required');
+      return callback('name and room name are required');
     }
 
     socket.join(room);
-    // socket.leave('the office fans')
+    users.removeUser(socket.id);
+    users.addUser(socket.id, name, room);
 
-    // io.emit ==> io.to('the office fans').emit
-    // socket.broadcast.emit ==> socket.broadcast.to('the office fans').emit
-    // socket.emit
+    io.to(room).emit('updateUserList', users.getUserList(room));
 
     // socket.emit from Admin to the new user
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
@@ -66,6 +69,11 @@ io.on('connection', (socket) => {
 
   // client disconnect
   socket.on('disconnect', () => {
+    let user = users.removeUser(socket.id);
+    if(user) {
+      io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+      io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left the room`));
+    }
     console.log('client disconnected');
   });
 });

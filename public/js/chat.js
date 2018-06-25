@@ -48,11 +48,32 @@ socket.on('connect', () => {
   });
 });
 
+
+socket.on('disconnect', () => {
+  console.log("Connection terminated from the server");
+});
+
 // send message to the server
 // socket.emit('createMessage',{
 //   from: 'john@example.com',
 //   text: "Hey this is form client side"
 // });
+
+// update joined user's name
+socket.on('updateUserList', (users) => {
+  // console.log('Users list', users);
+  let ol = document.createElement('ol');
+
+  users.forEach(user => {
+    let li = document.createElement('li');
+    li.appendChild(document.createTextNode(user));
+    ol.appendChild(li);
+    console.log(ol);
+  });
+  let showUsers = document.getElementById('users');
+  showUsers.innerHTML = ol.innerHTML;
+});
+
 
 // get message from the server
 socket.on('newMessage', (message) => {
@@ -161,9 +182,4 @@ locationButton.addEventListener('click', () => {
     locationButton.setAttribute('disabled', 'false');
     alert('unable to fetch location');
   });
-});
-
-
-socket.on('disconnect', () => {
-  console.log("Connection terminated from the server");
 });
