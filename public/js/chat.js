@@ -56,7 +56,7 @@ socket.on('connect', () => {
 
 // get message from the server
 socket.on('newMessage', (message) => {
-  console.log('newMessage', message);
+  // console.log('newMessage', message);
   // format time using moment
   const formattedTime = moment(message.createdAt).format('LT');
 

@@ -26,24 +26,33 @@ io.on('connection', (socket) => {
   //   createdAt: 2018
   // });
 
-  // socket.emit from Admin to the new user
-  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
-  // socket.broadcast.emit from Admin to all other users
-  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
-
 
   // join
   socket.on('join', (name, room, callback) => {
     if(!isRealString(name) || !isRealString(room)) {
       callback('name and room name are required');
     }
+
+    socket.join(room);
+    // socket.leave('the office fans')
+
+    // io.emit ==> io.to('the office fans').emit
+    // socket.broadcast.emit ==> socket.broadcast.to('the office fans').emit
+    // socket.emit
+
+    // socket.emit from Admin to the new user
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+    // socket.broadcast.emit from Admin to all other users
+    // socket.broadcast.to(room).emit() - emits the message to all other users who are connected/inside the room
+    socket.broadcast.to(room).emit('newMessage', generateMessage('Admin', `${name} has joined`));
+
     callback();
   });
 
 
   // get message from the client
   socket.on('createMessage', (message, callback) => {
-    console.log('createMessage', message);
+    // console.log('createMessage', message);
     // socket.emit - emits an event a single user but io.emit emits an event to all connected users
     // send message to each and every connected users
     io.emit('newMessage', generateMessage(message.from, message.text));
